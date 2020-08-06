@@ -1,0 +1,26 @@
+app:
+  cbr.url: http://www.cbr.ru/scripts
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: currency
+    password: currency
+    url: jdbc:postgresql://localhost:5433/currencydb
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    showSql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        format_sql: true
+        dialect: ${spring.jpa.database-platform}
+    generate-ddl: true
+    open-in-view: false
