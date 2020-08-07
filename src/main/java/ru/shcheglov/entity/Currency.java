@@ -2,8 +2,10 @@ package ru.shcheglov.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -32,6 +34,6 @@ public class Currency {
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "VALUE", nullable = false)
-    private Double value;
+    @OneToMany(mappedBy = "currency", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    private List<CurrencyQuota> quotas;
 }

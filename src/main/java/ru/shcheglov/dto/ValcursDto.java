@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -11,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @XmlRootElement(name = "ValCurs")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ValkursDto implements Serializable {
+public class ValcursDto implements Serializable {
 
     @XmlAttribute(name = "Date")
     private String date;

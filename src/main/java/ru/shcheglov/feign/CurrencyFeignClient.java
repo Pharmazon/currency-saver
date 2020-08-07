@@ -1,10 +1,10 @@
 package ru.shcheglov.feign;
 
 import feign.RequestLine;
-import ru.shcheglov.dto.ValkursDto;
+import ru.shcheglov.dto.ValcursDto;
 
 public interface CurrencyFeignClient {
 
     @RequestLine("GET /XML_daily.asp")
-    ValkursDto getXmlDaily();
+    ValcursDto getXmlDaily();
 }

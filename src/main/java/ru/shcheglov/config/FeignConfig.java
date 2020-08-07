@@ -16,7 +16,6 @@ import ru.shcheglov.feign.CurrencyFeignClient;
 import java.nio.charset.StandardCharsets;
 
 @Configuration
-//@PropertySource("classpath:/application.yml")
 public class FeignConfig {
 
     @Value("${app.cbr.url}")
