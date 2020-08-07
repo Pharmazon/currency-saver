@@ -1,10 +1,11 @@
 package ru.shcheglov.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 @Data

@@ -20,17 +20,10 @@ public class CurrencyQuotaService {
     private final CurrencyQuotaRepository quotaRepository;
     private final CurrencyService currencyService;
 
-    public void save(ValcursDto dto) {
+    void save(ValcursDto dto) {
         LocalDate date = DateTimeUtil.parseDate(dto.getDate());
         List<ValuteDto> valutes = dto.getValutes();
-        valutes.forEach(valute -> {
-            Currency currency = currencyService.findByCharCode(valute.getCharCode());
-            if (!exists(date, currency.getCharCode())) {
-                CurrencyQuota quota = new CurrencyQuota(date, valute.getValue());
-                quota.setCurrency(currency);
-                quotaRepository.save(quota);
-            }
-        });
+        valutes.forEach(valute -> saveIfNotExists(date, valute));
     }
 
     private List<CurrencyQuota> findAllByDate(LocalDate date) {
@@ -43,5 +36,15 @@ public class CurrencyQuotaService {
                 .filter(quota -> quota.getCurrency().getCharCode().equals(charCode))
                 .findFirst();
         return first.isPresent();
+    }
+
+    private void saveIfNotExists(LocalDate date, ValuteDto dto) {
+        if (exists(date, dto.getCharCode())) {
+            return;
+        }
+        Currency currency = currencyService.findByCharCode(dto.getCharCode());
+        CurrencyQuota quota = new CurrencyQuota(date, dto.getValue());
+        quota.setCurrency(currency);
+        quotaRepository.save(quota);
     }
 }

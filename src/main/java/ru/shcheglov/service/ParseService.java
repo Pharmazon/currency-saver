@@ -7,6 +7,7 @@ import ru.shcheglov.dto.ValcursDto;
 import ru.shcheglov.dto.ValuteDto;
 import ru.shcheglov.feign.CurrencyFeignClient;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Slf4j
@@ -18,10 +19,13 @@ public class ParseService {
     private final CurrencyQuotaService quotaService;
     private final CurrencyService currencyService;
 
+    @PostConstruct
     public void getXmlAndSaveToDb() {
+        log.debug("Делаем запрос на сайт cbr");
         ValcursDto dto = currencyFeignClient.getXmlDaily();
         List<ValuteDto> valutes = dto.getValutes();
         currencyService.saveListIfNotExists(valutes);
         quotaService.save(dto);
+        log.info("Котировки успешно сохранены в базу");
     }
 }
