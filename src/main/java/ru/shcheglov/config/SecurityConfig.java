@@ -1,47 +1,69 @@
 package ru.shcheglov.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+
+import javax.sql.DataSource;
+
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Override
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("user").password(passwordEncoder().encode("user")).roles("USER")
-                .and()
-                .withUser("admin").password(passwordEncoder().encode("admin")).roles("ADMIN");
-    }
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .authorizeRequests()
-//                .antMatchers("/admin/**").hasRole("ADMIN")
-//                .antMatchers("/anonymous*").anonymous()
-                .antMatchers("/login*").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/authenticated/**").authenticated()
+                .antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .antMatchers("/profile/**").authenticated()
+                .antMatchers("/login/**").permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/login.html")
-                .loginProcessingUrl("/perform_login")
-                .defaultSuccessUrl("/main.html", true)
-                .failureUrl("/error.html")
-//                .failureHandler(authenticationFailureHandler())
                 .and()
-                .logout()
-                .logoutUrl("/perform_logout")
+                .logout().logoutSuccessUrl("/")
                 .deleteCookies("JSESSIONID");
-//                .logoutSuccessHandler(logoutSuccessHandler());
+    }
+
+    @Bean
+    public JdbcUserDetailsManager users(DataSource dataSource) {
+        UserDetails user = User.builder()
+                .username("user")
+                .password("{bcrypt}")
+                .roles("USER")
+                .build();
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password("{bcrypt}")
+                .roles("ADMIN", "USER")
+                .build();
+        UserDetails superAdmin = User.builder()
+                .username("superadmin")
+                .password("{bcrypt}")
+                .roles("ADMIN", "USER", "SUPERADMIN")
+                .build();
+        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+        if (!users.userExists(user.getUsername())) {
+            users.createUser(user);
+        }
+        if (!users.userExists(admin.getUsername())) {
+            users.createUser(admin);
+        }
+        if (!users.userExists(superAdmin.getUsername())) {
+            users.createUser(superAdmin);
+        }
+        return users;
     }
 
     @Bean

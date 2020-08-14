@@ -6,11 +6,11 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: currency
     password: currency
-    url: jdbc:postgresql://localhost:5433/currencydb
+    url: jdbc:postgresql://localhost:5433/currencydb?currentSchema=currency_cfg_data
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    showSql: true
+    show-sql: true
     hibernate:
       ddl-auto: update
     properties:
