@@ -1,0 +1,264 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <!--ROLES-->
+    <changeSet context="legacy" author="generated" id="InsertRoleUser" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_ROLES
+                WHERE NAME='role_user'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_ROLES">
+            <column name="NAME">role_user</column>
+        </insert>
+    </changeSet>
+    <changeSet context="legacy" author="generated" id="InsertRoleAdmin" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_ROLES
+                WHERE NAME='role_admin'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_ROLES">
+            <column name="NAME">role_admin</column>
+        </insert>
+    </changeSet>
+    <changeSet context="legacy" author="generated" id="InsertRoleSuperadmin" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_ROLES
+                WHERE NAME='role_superadmin'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_ROLES">
+            <column name="NAME">role_superadmin</column>
+        </insert>
+    </changeSet>
+
+    <!--USERS-->
+    <changeSet context="legacy" author="generated" id="InsertUserAdmin" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_USERS
+                WHERE USERNAME='admin'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_USERS">
+            <column name="USERNAME">admin</column>
+            <column name="PASSWORD">$2y$12$yf0DmTlFkD3GOR1Re0j3yu14B5dWI5D1BZmx7OcMdSYoaGPbOl/w6</column>
+            <column name="FIRST_NAME">admin</column>
+            <column name="LAST_NAME">admin</column>
+            <column name="EMAIL">admin@currency.com</column>
+            <column name="CREATED" valueComputed="NOW()"/>
+            <column name="UPDATED" valueComputed="NOW()"/>
+            <column name="ENABLED">true</column>
+        </insert>
+    </changeSet>
+    <changeSet context="legacy" author="generated" id="InsertUserUser" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_USERS
+                WHERE USERNAME='user'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_USERS">
+            <column name="USERNAME">user</column>
+            <column name="PASSWORD">$2y$12$6fnTBAtzMCtFsRN/ZZYCqOt3pPyrMfr0zgdXsf4/5WkoaFPt/kCLu</column>
+            <column name="FIRST_NAME">user</column>
+            <column name="LAST_NAME">user</column>
+            <column name="EMAIL">user@currency.com</column>
+            <column name="CREATED" valueComputed="NOW()"/>
+            <column name="UPDATED" valueComputed="NOW()"/>
+            <column name="ENABLED">true</column>
+        </insert>
+    </changeSet>
+    <changeSet context="legacy" author="generated" id="InsertUserSuperadmin" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_USERS
+                WHERE USERNAME='SUPERADMIN'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_USERS">
+            <column name="USERNAME">superadmin</column>
+            <column name="PASSWORD">$2y$12$.KzkmirczusRQRONQ9WMm.PofRzkhL/YLG3G4Q1LgX3IjehFOh6uq</column>
+            <column name="FIRST_NAME">superadmin</column>
+            <column name="LAST_NAME">superadmin</column>
+            <column name="EMAIL">superadmin@currency.com</column>
+            <column name="CREATED" valueComputed="NOW()"/>
+            <column name="UPDATED" valueComputed="NOW()"/>
+            <column name="ENABLED">true</column>
+        </insert>
+    </changeSet>
+
+<!--    JOIN USERS ROLES-->
+    <changeSet context="legacy" author="generated" id="InsertJoinUsersRolesAdminAdmin" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_USERS_ROLES
+                WHERE
+                USER_ID = (SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'admin')
+                and
+                ROLE_ID = (SELECT ROLE_ID FROM APP_ROLES WHERE NAME = 'role_admin')
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_USERS_ROLES">
+            <column name="USER_ID" valueComputed="(SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'admin')"/>
+            <column name="ROLE_ID" valueComputed="(SELECT ROLE_ID FROM APP_ROLES WHERE NAME = 'role_admin')"/>
+        </insert>
+    </changeSet>
+    <changeSet context="legacy" author="generated" id="InsertJoinUsersRolesUserUser" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_USERS_ROLES
+                WHERE
+                USER_ID = (SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'user')
+                and
+                ROLE_ID = (SELECT ROLE_ID FROM APP_ROLES WHERE NAME = 'role_user')
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_USERS_ROLES">
+            <column name="USER_ID" valueComputed="(SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'user')"/>
+            <column name="ROLE_ID" valueComputed="(SELECT ROLE_ID FROM APP_ROLES WHERE NAME = 'role_user')"/>
+        </insert>
+    </changeSet>
+    <changeSet context="legacy" author="generated" id="InsertJoinUsersRolesSuperadminSuperadmin" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_USERS_ROLES
+                WHERE
+                USER_ID = (SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'superadmin')
+                and
+                ROLE_ID = (SELECT ROLE_ID FROM APP_ROLES WHERE NAME = 'role_superadmin')
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_USERS_ROLES">
+            <column name="USER_ID" valueComputed="(SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'superadmin')"/>
+            <column name="ROLE_ID" valueComputed="(SELECT ROLE_ID FROM APP_ROLES WHERE NAME = 'role_superadmin')"/>
+        </insert>
+    </changeSet>
+
+    <!--AUTHORITIES-->
+    <changeSet context="legacy" author="generated" id="InsertAuthorityEditor" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_AUTHORITIES
+                WHERE NAME='editor'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_AUTHORITIES">
+            <column name="NAME">editor</column>
+            <column name="DESCRIPTION">Права на чтение и редактирование</column>
+        </insert>
+    </changeSet>
+    <changeSet context="legacy" author="generated" id="InsertAuthorityReader" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_AUTHORITIES
+                WHERE NAME='reader'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_AUTHORITIES">
+            <column name="NAME">reader</column>
+            <column name="DESCRIPTION">Права только на чтение</column>
+        </insert>
+    </changeSet>
+
+    <!--    JOIN USERS AUTHORITIES-->
+    <changeSet context="legacy" author="generated" id="InsertJoinUsersAuthoritiesUserReader" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_USERS_AUTHORITIES
+                WHERE
+                AUTHORITY_ID = (SELECT AUTHORITY_ID FROM APP_AUTHORITIES WHERE NAME = 'reader')
+                and
+                USER_ID = (SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'user')
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_USERS_AUTHORITIES">
+            <column name="AUTHORITY_ID" valueComputed="(SELECT AUTHORITY_ID FROM APP_AUTHORITIES WHERE NAME = 'reader')"/>
+            <column name="USER_ID" valueComputed="(SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'user')"/>
+        </insert>
+    </changeSet>
+    <changeSet context="legacy" author="generated" id="InsertJoinUsersAuthoritiesAdminEditor" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_USERS_AUTHORITIES
+                WHERE
+                AUTHORITY_ID = (SELECT AUTHORITY_ID FROM APP_AUTHORITIES WHERE NAME = 'editor')
+                and
+                USER_ID = (SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'admin')
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_USERS_AUTHORITIES">
+            <column name="USER_ID" valueComputed="(SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'admin')"/>
+            <column name="AUTHORITY_ID" valueComputed="(SELECT AUTHORITY_ID FROM APP_AUTHORITIES WHERE NAME = 'editor')"/>
+        </insert>
+    </changeSet>
+    <changeSet context="legacy" author="generated" id="InsertJoinUsersAuthoritiesAdminReader" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_USERS_AUTHORITIES
+                WHERE
+                AUTHORITY_ID = (SELECT AUTHORITY_ID FROM APP_AUTHORITIES WHERE NAME = 'reader')
+                and
+                USER_ID = (SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'admin')
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_USERS_AUTHORITIES">
+            <column name="USER_ID" valueComputed="(SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'admin')"/>
+            <column name="AUTHORITY_ID" valueComputed="(SELECT AUTHORITY_ID FROM APP_AUTHORITIES WHERE NAME = 'reader')"/>
+        </insert>
+    </changeSet>
+    <changeSet context="legacy" author="generated" id="InsertJoinUsersAuthoritiesSuperadminEditor" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_USERS_AUTHORITIES
+                WHERE
+                AUTHORITY_ID = (SELECT AUTHORITY_ID FROM APP_AUTHORITIES WHERE NAME = 'editor')
+                and
+                USER_ID = (SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'superadmin')
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_USERS_AUTHORITIES">
+            <column name="USER_ID" valueComputed="(SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'superadmin')"/>
+            <column name="AUTHORITY_ID" valueComputed="(SELECT AUTHORITY_ID FROM APP_AUTHORITIES WHERE NAME = 'editor')"/>
+        </insert>
+    </changeSet>
+    <changeSet context="legacy" author="generated" id="InsertJoinUsersAuthoritiesSuperadminReader" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM APP_USERS_AUTHORITIES
+                WHERE
+                AUTHORITY_ID = (SELECT AUTHORITY_ID FROM APP_AUTHORITIES WHERE NAME = 'reader')
+                and
+                USER_ID = (SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'superadmin')
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="APP_USERS_AUTHORITIES">
+            <column name="USER_ID" valueComputed="(SELECT USER_ID FROM APP_USERS WHERE USERNAME = 'superadmin')"/>
+            <column name="AUTHORITY_ID" valueComputed="(SELECT AUTHORITY_ID FROM APP_AUTHORITIES WHERE NAME = 'reader')"/>
+        </insert>
+    </changeSet>
+
+
+</databaseChangeLog>

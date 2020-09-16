@@ -4,8 +4,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -42,6 +45,14 @@ public class User {
     @NonNull
     @Column(name = "ENABLED", nullable = false)
     private Boolean enabled;
+
+    @CreationTimestamp
+    @Column(name = "CREATED", nullable = false)
+    private LocalDateTime created;
+
+    @UpdateTimestamp
+    @Column(name = "UPDATED", nullable = false)
+    private LocalDateTime updated;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

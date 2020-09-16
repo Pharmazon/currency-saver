@@ -12,12 +12,12 @@ public enum Users {
     ADMIN("admin", "admin", "admin@example.com", true),
     SUPERADMIN("superadmin", "superadmin", "superadmin@example.com", true);
 
-    private String login;
+    private String username;
     private String password;
     private String email;
     private Boolean isEnabled;
 
     public static User getUser(Users user) {
-        return new User(user.getLogin(), user.getPassword(), user.getEmail(), user.getIsEnabled());
+        return new User(user.getUsername(), user.getPassword(), user.getEmail(), user.getIsEnabled());
     }
 }

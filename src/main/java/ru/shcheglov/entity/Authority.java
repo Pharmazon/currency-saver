@@ -25,6 +25,9 @@ public class Authority {
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;
 
+    @Column(name = "DESCRIPTION")
+    private String description;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "app_users_authorities",

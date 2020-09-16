@@ -1,0 +1,202 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet context="legacy" author="generated" id="createTableCurrencies" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="app_currencies"/>
+            </not>
+        </preConditions>
+        <createTable tableName="app_currencies">
+            <column name="CURRENCY_ID" type="BIGINT" defaultValueComputed="nextval('SQ_GENERAL')">
+                <constraints primaryKey="true"
+                             unique="true"
+                             uniqueConstraintName="CURRENCY_ID_unique"
+                             primaryKeyName="app_currencies_pkey"
+                             nullable="false"/>
+            </column>
+            <column name="CHAR_CODE" type="VARCHAR(100)" />
+            <column name="CODE" type="VARCHAR(200)" />
+            <column name="NAME" type="VARCHAR(200)" />
+            <column name="NOMINAL" type="INT" />
+            <column name="NUM_CODE" type="INT" />
+            <column name="CREATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UPDATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="legacy" author="generated" id="createTableRoles" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="app_roles"/>
+            </not>
+        </preConditions>
+        <createTable tableName="app_roles">
+            <column name="ROLE_ID" type="BIGINT" defaultValueComputed="nextval('SQ_GENERAL')">
+                <constraints primaryKey="true"
+                             unique="true"
+                             uniqueConstraintName="ROLE_ID_unique"
+                             primaryKeyName="app_roles_pkey"
+                             nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(200)" />
+        </createTable>
+    </changeSet>
+
+    <changeSet context="legacy" author="generated" id="createTableAuthorities" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="app_authorities"/>
+            </not>
+        </preConditions>
+        <createTable tableName="app_authorities">
+            <column name="AUTHORITY_ID" type="BIGINT" defaultValueComputed="nextval('SQ_GENERAL')">
+                <constraints primaryKey="true"
+                             unique="true"
+                             uniqueConstraintName="AUTHORITY_ID_unique"
+                             primaryKeyName="app_authorities_pkey"
+                             nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(200)">
+                <constraints nullable="false"
+                             unique="true"
+                             uniqueConstraintName="name_unique"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(255)" />
+        </createTable>
+    </changeSet>
+
+    <changeSet context="legacy" author="generated" id="createTableUsers" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="app_users"/>
+            </not>
+        </preConditions>
+        <createTable tableName="app_users">
+            <column name="USER_ID" type="BIGINT" defaultValueComputed="nextval('SQ_GENERAL')">
+                <constraints primaryKey="true"
+                             unique="true"
+                             uniqueConstraintName="user_id_unique"
+                             primaryKeyName="emc_users_pkey"
+                             nullable="false"/>
+            </column>
+
+            <column name="EMAIL" type="VARCHAR(200)">
+                <constraints nullable="false"
+                             unique="true"
+                             uniqueConstraintName="email_unique"/>
+            </column>
+            <column name="USERNAME" type="VARCHAR(200)">
+                <constraints nullable="false"
+                             unique="true"
+                             uniqueConstraintName="username_unique"/>
+            </column>
+            <column name="FIRST_NAME" type="VARCHAR(200)" />
+            <column name="LAST_NAME" type="VARCHAR(200)" />
+            <column name="PASSWORD" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UPDATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENABLED" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="legacy" author="generated" id="createTableCurrencyQuotas" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="APP_CURRENCY_QUOTAS"/>
+            </not>
+            <tableExists tableName="APP_CURRENCIES"/>
+        </preConditions>
+        <createTable tableName="APP_CURRENCY_QUOTAS">
+            <column name="QUOTA_ID" type="BIGINT" defaultValueComputed="nextval('SQ_GENERAL')">
+                <constraints primaryKey="true"
+                             unique="true"
+                             uniqueConstraintName="QUOTA_ID_unique"
+                             primaryKeyName="app_quota_pkey"
+                             nullable="false"/>
+            </column>
+
+            <column name="DATE" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VALUE" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UPDATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CURRENCY_FID" type="BIGINT">
+                <constraints foreignKeyName="join_currency_quota_fk"
+                             referencedTableName="APP_CURRENCIES"
+                             referencedColumnNames="CURRENCY_ID"
+                             nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="legacy" author="generated" id="createTableJoinUsersAuthorities" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="APP_USERS_AUTHORITIES"/>
+            </not>
+            <tableExists tableName="APP_USERS"/>
+            <tableExists tableName="APP_AUTHORITIES"/>
+        </preConditions>
+        <createTable tableName="APP_USERS_AUTHORITIES">
+            <column name="AUTHORITY_ID" type="BIGINT">
+                <constraints foreignKeyName="join_authorities_users_authority_fk"
+                             referencedTableName="APP_AUTHORITIES"
+                             referencedColumnNames="AUTHORITY_ID"
+                             nullable="false"/>
+            </column>
+            <column name="USER_ID" type="BIGINT">
+                <constraints foreignKeyName="join_authorities_users_user_fk"
+                             referencedTableName="APP_USERS"
+                             referencedColumnNames="USER_ID"
+                             nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="legacy" author="generated" id="createTableJoinUsersRoles" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="APP_USERS_ROLES"/>
+            </not>
+            <tableExists tableName="APP_USERS"/>
+            <tableExists tableName="APP_ROLES"/>
+        </preConditions>
+        <createTable tableName="APP_USERS_ROLES">
+            <column name="ROLE_ID" type="BIGINT">
+                <constraints foreignKeyName="join_roles_users_role_fk"
+                             referencedTableName="APP_ROLES"
+                             referencedColumnNames="ROLE_ID"
+                             nullable="false"/>
+            </column>
+            <column name="USER_ID" type="BIGINT">
+                <constraints foreignKeyName="join_roles_users_user_fk"
+                             referencedTableName="APP_USERS"
+                             referencedColumnNames="USER_ID"
+                             nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

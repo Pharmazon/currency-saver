@@ -2,8 +2,11 @@ package ru.shcheglov.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -32,6 +35,15 @@ public class Currency {
 
     @Column(name = "NAME", nullable = false)
     private String name;
+
+    @CreationTimestamp
+    @Column(name = "CREATED", nullable = false)
+    private LocalDateTime created;
+
+    @UpdateTimestamp
+    @Column(name = "UPDATED", nullable = false)
+    private LocalDateTime updated;
+
 
     @OneToMany(mappedBy = "currency", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     private List<CurrencyQuota> quotas;

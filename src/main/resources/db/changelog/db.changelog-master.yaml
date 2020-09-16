@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/2020/initSequences.xml
+  - include:
+      file: db/changelog/2020/initTables.xml
+  - include:
+      file: db/changelog/2020/initData.xml

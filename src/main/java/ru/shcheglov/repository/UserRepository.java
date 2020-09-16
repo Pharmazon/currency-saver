@@ -7,5 +7,5 @@ import ru.shcheglov.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findByLogin(String login);
+    User findByUsername(String username);
 }

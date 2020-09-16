@@ -1,3 +1,6 @@
+server:
+  port: 5555
+
 app:
   cbr.url: http://www.cbr.ru/scripts
 
@@ -5,14 +8,14 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: currency
-    password: currency
-    url: jdbc:postgresql://localhost:5433/currencydb?currentSchema=currency_cfg_data
+    password: passw0rd
+    url: jdbc:postgresql://localhost:5450/currencydb?currentSchema=currency_cfg
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         temp:

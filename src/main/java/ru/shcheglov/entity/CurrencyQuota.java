@@ -2,6 +2,7 @@ package ru.shcheglov.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -32,6 +33,10 @@ public class CurrencyQuota {
     @CreationTimestamp
     @Column(name = "CREATED", nullable = false)
     private LocalDateTime created;
+
+    @UpdateTimestamp
+    @Column(name = "UPDATED", nullable = false)
+    private LocalDateTime updated;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "CURRENCY_FID", referencedColumnName = "CURRENCY_ID")

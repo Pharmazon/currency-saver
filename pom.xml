@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<feign.version>11.0</feign.version>
+		<liquibase.version>3.6.3</liquibase.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
@@ -54,6 +55,11 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>${liquibase.version}</version>
+		</dependency>
 
 
 		<dependency>
@@ -78,6 +84,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludeDevtools>true</excludeDevtools>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
